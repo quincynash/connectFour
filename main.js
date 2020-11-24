@@ -1,50 +1,67 @@
-const COLS = 8;
-const ROWS = 7;
-const SIZE = 60;
-const SPACE = 10;
-const BW = COLS * SIZE;
-const BH = ROWS * SIZE;
-const PLAYER = 0;
-const AI = 1;
-const PLAYER_PIECE = [250, 250, 0];
-const AI_PIECE = [255, 90, 90];
-const NO_PIECE = [255, 255, 255];
-const BACKGROUND = [80, 80, 255, 175]
-let board = [];
-let xoff, yoff, title;
-
-function preload() {
-  title = loadImage("Images/title.png")
-}
-
-function setup() {
-  createCanvas(windowWidth, windowHeight)
-  for (var x = 0; x < COLS; x++) {
-    sub = []
-    for (var y = 0; y < ROWS; y++) {
-      sub.push(new Cell(x, y, random([AI_PIECE, PLAYER_PIECE])))
+function drawBoard() {
+  for (var y = 0; y < ROWS; y++) {
+    for (var x = 0; x < COLS; x++) {
+      board[x][y].draw()
     }
-    board.push(sub)
   }
   
-  calculateOffset()
+  noFill()
+  stroke(0)
+  rect(0, 0, BW, BH)
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight)
-  calculateOffset()
+function onBoard(x, y) {
+  return x >= 0 && y >= 0 && x < COLS && y < ROWS
+} 
+
+function piece(turn) {
+  if (turn == PLAYER) {
+    return PLAYER_PIECE
+  }
+  return AI_PIECE
 }
 
-function mousePressed() {
-  
+function switchTurn() {
+  if (turn == PLAYER) {
+    turn = AI
+  } else {
+    turn = PLAYER
+  }
 }
 
-function draw() {
-  background(255)
-  
+function mousePos(cell=true) {
+  var pos = createVector(mouseX - xoff, mouseY - yoff)
+  if (cell) {
+    pos.x = floor(pos.x / SIZE)
+    pos.y = floor(pos.y / SIZE)
+  }
+  return pos
+}
+
+function drawText() { 
   image(title, width/2-title.width/2, 0)
   
-  translate(xoff, yoff)
-  
-  drawBoard()
+  fill(0)
+  stroke(0)
+  textAlign(CENTER, CENTER)
+  textFont('Futura')
+  textSize(50)
+  text("Score: " + str(playerScore) + " - " + str(computerScore), width/2, (height + yoff + BH)/2)
+}
+
+function placePiece(col, swap=true) {
+  for (var i = ROWS - 1; i >= 0; i--) {
+    if (board[col][i].piece == NO_PIECE) {
+      board[col][i].piece = piece(turn)
+      if (swap) {
+        switchTurn()
+      }
+      break
+    }
+  }
+}
+
+function calculateOffset() {
+  xoff = width/2 - BW/2
+  yoff = height/2 - BH/2
 }
