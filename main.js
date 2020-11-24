@@ -11,7 +11,11 @@ const AI_PIECE = [255, 90, 90];
 const NO_PIECE = [255, 255, 255];
 const BACKGROUND = [80, 80, 255, 175]
 let board = [];
-let xoff, yoff;
+let xoff, yoff, title;
+
+function preload() {
+  title = loadImage("Images/title.png")
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight)
@@ -37,6 +41,9 @@ function mousePressed() {
 
 function draw() {
   background(255)
+  
+  image(title, width/2-title.width/2, 0)
+  
   translate(xoff, yoff)
   
   drawBoard()
