@@ -11,10 +11,11 @@ const AI_PIECE = [255, 90, 90];
 const NO_PIECE = [255, 255, 255];
 const BACKGROUND = [80, 80, 255, 175]
 let board = [];
-let turn = PLAYER;
+let dropping = false;
+let turn = 0;
 let playerScore = 0;
 let computerScore = 0;
-let xoff, yoff, title;
+let xoff, yoff, title, pos, vel, end, orig;
 
 function preload() {
   title = loadImage("Images/title.png")
@@ -31,6 +32,7 @@ function setup() {
   }
   
   calculateOffset()
+  //frameRate(5)
 }
 
 function windowResized() {
@@ -39,9 +41,14 @@ function windowResized() {
 }
 
 function mousePressed() {
-  var pos = mousePos()
-  if (onBoard(pos.x, pos.y)) {
-    placePiece(pos.x)
+  if (!dropping) {
+    var cell = mousePos()
+    if (onBoard(cell.x, cell.y)) {
+      var y = emptyRow(cell.x)
+      if (y != -1) {
+        startDrop(cell.x, y)
+      }
+    }
   }
 }
 
@@ -51,6 +58,10 @@ function draw() {
   drawText()
   
   translate(xoff, yoff)
-  
+    
   drawBoard()
+  
+  if (dropping) {
+    animateDrop()
+  }
 }
