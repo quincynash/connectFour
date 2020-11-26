@@ -10,6 +10,10 @@ function drawBoard() {
   rect(0, 0, BW, BH)
 }
 
+function cartesian(cx, cy, r, a) {
+  return createVector(cx + r * sin(a), cy + r * cos(a))
+}
+
 function onBoard(x, y) {
   return x >= 0 && y >= 0 && x < COLS && y < ROWS
 }
@@ -40,6 +44,7 @@ function mousePos(cell = true) {
 
 function drawText() {
   image(title, width / 2 - title.width / 2, 0)
+  image(settings, width - 30, 0, 30, 30)
 
   fill(0)
   stroke(0)
