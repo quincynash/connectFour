@@ -49,15 +49,48 @@ function drawText() {
   text("Score: " + str(playerScore) + " - " + str(computerScore), width/2, (height + yoff + BH)/2)
 }
 
-function placePiece(col, swap=true) {
-  for (var i = ROWS - 1; i >= 0; i--) {
-    if (board[col][i].piece == NO_PIECE) {
-      board[col][i].piece = piece(turn)
-      if (swap) {
-        switchTurn()
-      }
-      break
+function startDrop(col, row) {
+  dropping = true
+  orig = createVector(col, row)
+  pos = createVector((col + 0.5) * SIZE, SIZE/2)
+  vel = 0
+  end = createVector((col + 0.5) * SIZE, (row + 0.5) * SIZE)
+  bounces = 0
+}
+
+function animateDrop() {
+  fill(piece(turn))
+    stroke(0)
+    circle(pos.x, pos.y, SIZE - SPACE)
+    
+    vel += 0.25
+    pos.y += vel
+    
+    if (pos.y > end.y) {
+      pos.y = end.y
+      vel *= -0.3
+      bounces += 1
     }
+    
+    if (bounces > 3) {
+      dropping = false
+      placePiece(orig.x)
+    }
+}
+
+function emptyRow(col) {
+  for (var row = ROWS - 1; row >= 0; row--) {
+    if (board[col][row].piece == NO_PIECE) {
+      return row
+    }
+  }
+  return -1
+}
+
+function placePiece(col, swap=true) {
+  board[col][emptyRow(col)].piece = piece(turn)
+  if (swap) {
+    switchTurn()
   }
 }
 
