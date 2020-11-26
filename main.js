@@ -15,10 +15,11 @@ let dropping = false;
 let turn = 0;
 let playerScore = 0;
 let computerScore = 0;
-let xoff, yoff, title, pos, vel, end, orig;
+let xoff, yoff, title, settings, pos, vel, end, orig;
 
 function preload() {
   title = loadImage("Images/title.png")
+  settings = loadImage("Images/settings.png")
 }
 
 function setup() {
@@ -50,6 +51,12 @@ function mousePressed() {
       }
     }
   }
+  if (mouseX > width - 30 && mouseY < 30) {
+    translate(-xoff, -yoff)
+    fill(0)
+    rect(0, 0, 100, 100)
+    frameRate(1)
+  }
 }
 
 function draw() {
@@ -58,10 +65,10 @@ function draw() {
   drawText()
   
   translate(xoff, yoff)
-    
-  drawBoard()
   
   if (dropping) {
     animateDrop()
   }
+  
+  drawBoard()
 }
