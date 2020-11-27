@@ -11,15 +11,17 @@ const AI_PIECE = [255, 90, 90];
 const NO_PIECE = [255, 255, 255];
 const BACKGROUND = [80, 80, 255, 175]
 let board = [];
+let state = "game"
 let dropping = false;
 let turn = 0;
 let playerScore = 0;
 let computerScore = 0;
-let xoff, yoff, title, settings, pos, vel, end, orig;
+let xoff, yoff, title, settings, font, pos, vel, end, orig;
 
 function preload() {
-  title = loadImage("Images/title.png")
-  settings = loadImage("Images/settings.png")
+  title = loadImage("Other/title.png")
+  settings = loadImage("Other/settings.png")
+  font = loadFont("Other/font.ttf")
 }
 
 function setup() {
@@ -42,7 +44,7 @@ function windowResized() {
 }
 
 function mousePressed() {
-  if (!dropping) {
+  if (!dropping && state == "game") {
     var cell = mousePos()
     if (onBoard(cell.x, cell.y)) {
       var y = emptyRow(cell.x)
@@ -51,24 +53,29 @@ function mousePressed() {
       }
     }
   }
-  if (mouseX > width - 30 && mouseY < 30) {
-    translate(-xoff, -yoff)
-    fill(0)
-    rect(0, 0, 100, 100)
-    frameRate(1)
+  if (mouseX > width - 30 && mouseY < 30 && state == "game") {
+    state = "settings"
   }
 }
 
 function draw() {
   background(255)
+  
+  if (state == "game") {
+    drawText()
+    
+    translate(xoff, yoff)
 
-  drawText()
-  
-  translate(xoff, yoff)
-  
-  if (dropping) {
-    animateDrop()
+    if (dropping) {
+      animateDrop()
+    }
+
+    drawBoard()
+  } else if (state == "home") {
+    image(title, width / 2 - title.width / 2, 0)
+  } else if (state == "settings") {
+    
+  } else if (state == "advanced") {
+    
   }
-  
-  drawBoard()
 }
