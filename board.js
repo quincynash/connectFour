@@ -49,9 +49,9 @@ function drawText() {
   fill(0)
   stroke(0)
   textAlign(CENTER, CENTER)
-  textFont('Futura')
+  textFont(font)
   textSize(50)
-  text("Score: " + str(playerScore) + " - " + str(computerScore), width / 2, (height + yoff + BH) / 2)
+  text("Score :   " + str(playerScore) + "  -  " + str(computerScore), width / 2, (height + yoff + BH) / 2)
 }
 
 function startDrop(col, row) {
